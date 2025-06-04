@@ -2,6 +2,51 @@ import * as THREE from 'three';
 
 const textureLoader = new THREE.TextureLoader();
 
+// Helper function to create a random moon-like texture
+function createRandomMoonTexture(size = 256) {
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const context = canvas.getContext('2d');
+
+    // Base moon color (greyish)
+    const baseGrey = Math.floor(Math.random() * 50) + 100; // Random base grey between 100 and 150
+    context.fillStyle = `rgb(${baseGrey}, ${baseGrey}, ${baseGrey})`;
+    context.fillRect(0, 0, size, size);
+
+    // Add some random craters
+    const numCraters = Math.floor(Math.random() * 25) + 25; // 25 to 50 craters
+    for (let i = 0; i < numCraters; i++) {
+        const x = Math.random() * size;
+        const y = Math.random() * size;
+        const radius = Math.random() * (size / 10) + (size / 20); // Crater radius
+        const craterGrey = baseGrey + (Math.random() * 60 - 30); // Lighter or darker grey
+        context.beginPath();
+        context.arc(x, y, radius, 0, Math.PI * 2, false);
+        context.fillStyle = `rgb(${craterGrey}, ${craterGrey}, ${craterGrey})`;
+        context.fill();
+
+        // Add a subtle highlight/shadow to craters for a bit of depth
+        const edgeOffset = radius * 0.3;
+        const highlightGrey = Math.min(255, craterGrey + 20);
+        const shadowGrey = Math.max(0, craterGrey - 20);
+
+        context.beginPath();
+        context.arc(x - edgeOffset, y - edgeOffset, radius, 0, Math.PI*2, false);
+        context.fillStyle = `rgba(${highlightGrey},${highlightGrey},${highlightGrey}, 0.5)`;
+        context.fill();
+
+        context.beginPath();
+        context.arc(x + edgeOffset, y + edgeOffset, radius, Math.PI, Math.PI*0.5, true); // Shadow on opposite side
+        context.fillStyle = `rgba(${shadowGrey},${shadowGrey},${shadowGrey}, 0.3)`;
+        context.fill();
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true; // Important for canvas textures
+    return texture;
+}
+
 const PLANET_DATA = {
     mercury: { color: 0x8c8c8c, radius: 0.38, distance: 10, speed: 0.020, texture: 'mercury.jpg', description: 'Mercury is the smallest planet in our solar system and nearest to the Sun. It is only slightly larger than Earth\'s Moon.' },
     venus: { color: 0xffd700, radius: 0.95, distance: 15, speed: 0.015, texture: 'venus.jpg', description: 'Venus is the second planet from the Sun. It is named after the Roman goddess of love and beauty. As the brightest natural object in Earth\'s night sky after the Moon, Venus can cast shadows and can be, on rare occasion, visible to the naked eye in broad daylight.' },
@@ -95,7 +140,8 @@ export default class PlanetManager {
 
             if (data.moon) {
                 const moonData = MOON_DATA.moon;
-                const moonTexture = moonData.texture ? textureLoader.load(`assets/textures/${moonData.texture}`) : null;
+                // const moonTexture = moonData.texture ? textureLoader.load(`assets/textures/${moonData.texture}`) : null;
+                const moonTexture = createRandomMoonTexture(); // Use the new random texture function
                 
                 const moonMaterialProperties = {
                     metalness: 0.1,
