@@ -137,6 +137,8 @@ solar-system/
 - **Mouse Wheel**: Zoom in/out
 - **Left Click**: Select planet for information
 - **Space**: Pause/unpause animation
+- **+ / =**: Speed up simulation
+- **- / _**: Slow down simulation
 - **Arrow Keys**: Fine camera movement
 - **R**: Reset camera position
 - **1-8**: Jump to specific planets

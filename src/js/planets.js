@@ -3,14 +3,14 @@ import * as THREE from 'three';
 const textureLoader = new THREE.TextureLoader();
 
 const PLANET_DATA = {
-    mercury: { color: 0x8c8c8c, radius: 0.38, distance: 10, speed: 0.020, texture: 'mercury.jpg' },
-    venus: { color: 0xffd700, radius: 0.95, distance: 15, speed: 0.015, texture: 'venus.jpg' },
-    earth: { color: 0x0077ff, radius: 1.0, distance: 20, speed: 0.010, moon: true, texture: 'earth.jpg' },
-    mars: { color: 0xff4500, radius: 0.53, distance: 28, speed: 0.008, texture: 'mars.jpg' },
-    jupiter: { color: 0xffa500, radius: 3.5, distance: 45, speed: 0.004, texture: 'jupiter.jpg' },
-    saturn: { color: 0xf0e68c, radius: 3.0, distance: 65, speed: 0.003, rings: true, texture: 'saturn.jpg', ringTexture: 'saturn_ring.png' },
-    uranus: { color: 0xadd8e6, radius: 1.8, distance: 80, speed: 0.002, texture: 'uranus.jpg' },
-    neptune: { color: 0x0000ff, radius: 1.7, distance: 95, speed: 0.001, texture: 'neptune.jpg' }
+    mercury: { color: 0x8c8c8c, radius: 0.38, distance: 10, speed: 0.020, texture: 'mercury.jpg', description: 'Mercury is the smallest planet in our solar system and nearest to the Sun. It is only slightly larger than Earth\'s Moon.' },
+    venus: { color: 0xffd700, radius: 0.95, distance: 15, speed: 0.015, texture: 'venus.jpg', description: 'Venus is the second planet from the Sun. It is named after the Roman goddess of love and beauty. As the brightest natural object in Earth\'s night sky after the Moon, Venus can cast shadows and can be, on rare occasion, visible to the naked eye in broad daylight.' },
+    earth: { color: 0x0077ff, radius: 1.0, distance: 20, speed: 0.010, moon: true, texture: 'earth.jpg', description: 'Our home planet, Earth, is the third planet from the Sun, and the only place we know of so far that\'s inhabited by living things.' },
+    mars: { color: 0xff4500, radius: 0.53, distance: 28, speed: 0.008, texture: 'mars.jpg', description: 'Mars is the fourth planet from the Sun – a dusty, cold, desert world with a very thin atmosphere. Mars is also a dynamic planet with seasons, polar ice caps, canyons, extinct volcanoes, and evidence that it was even more active in the past.' },
+    jupiter: { color: 0xffa500, radius: 3.5, distance: 45, speed: 0.004, texture: 'jupiter.jpg', description: 'Jupiter is the fifth planet from our Sun and is, by far, the largest planet in the solar system – more than twice as massive as all the other planets combined.' },
+    saturn: { color: 0xf0e68c, radius: 3.0, distance: 65, speed: 0.003, rings: true, texture: 'saturn.jpg', ringTexture: 'saturn_ring.png', description: 'Saturn is the sixth planet from the Sun and the second largest planet in our solar system. Adorned with thousands of beautiful ringlets, Saturn is unique among the planets.' },
+    uranus: { color: 0xadd8e6, radius: 1.8, distance: 80, speed: 0.002, texture: 'uranus.jpg', description: 'Uranus is the seventh planet from the Sun. It\'s a giant, icy planet, also known as an "ice giant." It is the only planet that rotates on its side.' },
+    neptune: { color: 0x0000ff, radius: 1.7, distance: 95, speed: 0.001, texture: 'neptune.jpg', description: 'Neptune is the eighth and most distant major planet orbiting our Sun. It\'s dark, cold, and very windy. It\'s the last of the planets in our solar system.' }
 };
 
 const MOON_DATA = {
@@ -49,6 +49,7 @@ export default class PlanetManager {
             planet.userData.distance = data.distance; 
             planet.userData.speed = data.speed;       
             planet.userData.angle = Math.random() * Math.PI * 2; 
+            planet.userData.description = data.description;
 
             planet.position.x = data.distance * Math.cos(planet.userData.angle);
             planet.position.z = data.distance * Math.sin(planet.userData.angle);
@@ -59,7 +60,19 @@ export default class PlanetManager {
 
             this.planets.push(planet);
             this.scene.add(planet);
-            this.planetObjects[name] = planet; 
+            this.planetObjects[name] = planet;
+
+            // Create orbital trail
+            const orbitPoints = [];
+            const segments = 128; // Number of segments for the circle
+            for (let i = 0; i <= segments; i++) {
+                const theta = (i / segments) * Math.PI * 2;
+                orbitPoints.push(new THREE.Vector3(data.distance * Math.cos(theta), 0, data.distance * Math.sin(theta)));
+            }
+            const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+            const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
+            const orbitTrail = new THREE.Line(orbitGeometry, orbitMaterial);
+            this.scene.add(orbitTrail);
 
             if (data.rings && data.ringTexture) {
                 const ringTexture = textureLoader.load(`assets/textures/${data.ringTexture}`);
@@ -111,22 +124,22 @@ export default class PlanetManager {
         });
     }
 
-    updateOrbits() {
+    updateOrbits(timeScale = 1.0) {
         this.planets.forEach(planet => {
-            planet.userData.angle += planet.userData.speed;
+            planet.userData.angle += planet.userData.speed * timeScale;
             planet.position.x = planet.userData.distance * Math.cos(planet.userData.angle);
             planet.position.z = planet.userData.distance * Math.sin(planet.userData.angle);
-            planet.rotation.y += 0.001; // Slow self-rotation for planets
+            planet.rotation.y += 0.001 * timeScale;
         });
 
         this.moons.forEach(moon => {
             const parentPlanet = moon.userData.parentPlanet;
             if (parentPlanet) {
-                moon.userData.angle += moon.userData.speed;
+                moon.userData.angle += moon.userData.speed * timeScale;
                 moon.position.x = parentPlanet.position.x + moon.userData.distance * Math.cos(moon.userData.angle);
                 moon.position.z = parentPlanet.position.z + moon.userData.distance * Math.sin(moon.userData.angle);
                 moon.position.y = parentPlanet.position.y; 
-                moon.rotation.y += 0.005; // Moon self-rotation
+                moon.rotation.y += 0.005 * timeScale;
             }
         });
     }

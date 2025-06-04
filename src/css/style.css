@@ -10,3 +10,102 @@ body {
     height: 100vh;
     display: block;
 } 
+
+/* Styles for Planet Info Panel */
+#planet-info-panel {
+    /* position, top, left, z-index are set by JS */
+    padding: 20px; 
+    background-color: rgba(30, 30, 40, 0.92); /* Slightly bluish dark background, more opaque */
+    color: #f0f0f0; 
+    border: 1px solid #555;
+    border-radius: 10px; 
+    max-width: 350px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); 
+    display: none; /* Initially hidden, JS controls display */
+    line-height: 1.6; 
+    box-sizing: border-box; /* Important for responsive width calculations */
+}
+
+#planet-info-panel h2 {
+    margin-top: 0;
+    margin-bottom: 15px; 
+    padding-bottom: 10px;
+    border-bottom: 1px solid #666; 
+    font-size: 1.7em; /* Adjusted for balance */
+    color: #7cc5e3; /* A slightly softer, pleasant blue */
+    font-weight: 600;
+}
+
+#planet-info-panel p {
+    margin-bottom: 20px; 
+    font-size: 0.95em;
+}
+
+#planet-info-panel button#close-planet-info {
+    display: block; 
+    width: 100%;
+    padding: 12px 15px; 
+    background-color: #7cc5e3; /* Match h2 color */
+    color: #1c2532; /* Darker text for contrast on blue button */
+    border: none;
+    border-radius: 6px; /* Consistent rounding */
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#planet-info-panel button#close-planet-info:hover {
+    background-color: #61dafb; /* Brighter blue on hover */
+}
+
+#planet-info-panel button#close-planet-info:active {
+    transform: scale(0.98); 
+}
+
+/* Responsive adjustments for Planet Info Panel */
+@media (max-width: 768px) {
+    #planet-info-panel {
+        max-width: none; 
+        width: calc(100% - 40px); /* Full width minus some margin */
+        /* left and top are set by JS, no need to override here unless changing positioning strategy */
+        margin-left: auto; /* If not using JS for left, this helps center with width */
+        margin-right: auto; /* If not using JS for left, this helps center with width */
+        padding: 15px;
+    }
+
+    #planet-info-panel h2 {
+        font-size: 1.5em;
+    }
+
+    #planet-info-panel p {
+        font-size: 0.9em;
+    }
+
+    #planet-info-panel button#close-planet-info {
+        padding: 10px 12px;
+        font-size: 0.95em;
+    }
+}
+
+@media (max-width: 480px) {
+    #planet-info-panel {
+        width: calc(100% - 20px); /* Even less margin for very small screens */
+        padding: 12px;
+    }
+
+     #planet-info-panel h2 {
+        font-size: 1.35em;
+    }
+
+    #planet-info-panel p {
+        font-size: 0.88em;
+    }
+
+    #planet-info-panel button#close-planet-info {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+} 

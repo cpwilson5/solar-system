@@ -110,12 +110,12 @@ export default class SceneManager {
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     }
 
-    update() {
+    update(timeScale = 1.0) { // Default to 1.0 if not provided
         if (this.sun) {
-            this.sun.rotation.y += 0.0005; // Slow self-rotation for the Sun
+            this.sun.rotation.y += 0.0005 * timeScale; // Apply timeScale to sun rotation
         }
-        this.planetManager.updateOrbits();
-        this.controlsManager.update();
+        this.planetManager.updateOrbits(timeScale);
+        this.controlsManager.update(); // Controls update might not need timeScale, depends on its implementation
         this.renderer.render(this.scene, this.camera);
     }
 } 
