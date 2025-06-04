@@ -56,7 +56,7 @@ export default class SceneManager {
     }
 
     createSun() {
-        const sunTexture = textureLoader.load('../assets/textures/sun.jpg');
+        const sunTexture = textureLoader.load('assets/textures/sun.jpg');
         const sunGeometry = new THREE.SphereGeometry(5, 64, 64); // Increased segments for smoother sun
         const sunMaterial = new THREE.MeshStandardMaterial({
             emissiveMap: sunTexture,

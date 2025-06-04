@@ -29,7 +29,7 @@ export default class PlanetManager {
     initPlanets() {
         Object.keys(PLANET_DATA).forEach(name => {
             const data = PLANET_DATA[name];
-            const planetTexture = data.texture ? textureLoader.load(`../assets/textures/${data.texture}`) : null;
+            const planetTexture = data.texture ? textureLoader.load(`assets/textures/${data.texture}`) : null;
             
             const materialProperties = {
                 metalness: 0.1, // Adjusted for better appearance with textures
@@ -62,7 +62,7 @@ export default class PlanetManager {
             this.planetObjects[name] = planet; 
 
             if (data.rings && data.ringTexture) {
-                const ringTexture = textureLoader.load(`../assets/textures/${data.ringTexture}`);
+                const ringTexture = textureLoader.load(`assets/textures/${data.ringTexture}`);
                 const ringGeometry = new THREE.RingGeometry(data.radius * 1.2, data.radius * 2.2, 64);
                 // Using MeshStandardMaterial for rings to potentially receive shadows, adjust as needed
                 const ringMaterial = new THREE.MeshStandardMaterial({
@@ -82,7 +82,7 @@ export default class PlanetManager {
 
             if (data.moon) {
                 const moonData = MOON_DATA.moon;
-                const moonTexture = moonData.texture ? textureLoader.load(`../assets/textures/${moonData.texture}`) : null;
+                const moonTexture = moonData.texture ? textureLoader.load(`assets/textures/${moonData.texture}`) : null;
                 
                 const moonMaterialProperties = {
                     metalness: 0.1,
