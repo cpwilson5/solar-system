@@ -1,0 +1,25 @@
+{
+  "name": "solar-system-3d",
+  "version": "0.1.0",
+  "description": "A 3D solar system visualization",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "threejs",
+    "javascript",
+    "3d",
+    "solar-system"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+} 

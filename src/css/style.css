@@ -1,0 +1,12 @@
+body {
+    margin: 0;
+    overflow: hidden; /* Prevent scrollbars */
+    background-color: #000000; /* Black background for space */
+    color: white;
+}
+
+#scene-container {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+} 
